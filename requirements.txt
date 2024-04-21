@@ -19,7 +19,6 @@ neat-python==0.92
 notify-py==0.3.3
 numpy==1.21.1
 pillow==10.2.0
-py3minepi==0.0.1.1
 pyAesCrypt==6.0.0
 PyAutoGUI==0.9.52
 pycparser==2.20
