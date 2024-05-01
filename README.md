@@ -1,4 +1,4 @@
-[Скачать exe файл.](https://github.com/Who1s1t/PhotoHub/releases/tag/release)
+[Скачать exe файл](https://github.com/Who1s1t/PhotoHub/releases/tag/release)
 -
 Собрать из исходников:
 ```bash
