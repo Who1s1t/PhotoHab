@@ -1,13 +1,12 @@
 import sys
-from os import listdir
+from os import listdir, getcwd
 from os.path import isfile, join
-
 
 import screeninfo
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QWidget, QApplication, QMainWindow, QPushButton, QGridLayout, QVBoxLayout, \
-    QHBoxLayout,  QLabel, QScrollArea, QFrame
+    QHBoxLayout, QLabel, QScrollArea, QFrame
 
 from ImageWindow import ImageWindow
 from add_folder import AddFolder
@@ -46,6 +45,14 @@ class FolderSelector(QFrame):
         folders = db_sess.query(Folder).all()
         for folder in folders:
             fold = QLabel(folder.name)
+            fold.setMinimumHeight(30)
+            fold.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            fold.setStyleSheet("QLabel {"
+                               "border-style: solid;"
+                               "border-width: 1px;"
+                               "border-color: black; "
+                               " border-radius: 4px;"
+                               "}")
             fold.mousePressEvent = lambda e, path=folder.folder_path: self.set_directory(path)
             self.layout.addWidget(fold)
 
@@ -54,7 +61,7 @@ class ImageFileSelector(QWidget):
     def __init__(self, display_image=None):
         QWidget.__init__(self, )
 
-        self.img_size = 100
+        self.img_size = screeninfo.get_monitors()[0].width // 10
         self.album_path = ''
         self.files = ''
 
@@ -66,7 +73,7 @@ class ImageFileSelector(QWidget):
     def on_thumbnail_click(self, event, index, img_file_path, all_img, album):
 
         self.display_image.set_img(img_file_path, album, all_img, index, set_direcory=self.set_directory)
-        self.display_image.show()
+        self.display_image.showMaximized()
 
     def set_directory(self, album_path=''):
         self.album_path = album_path
@@ -131,8 +138,8 @@ class MainWindow(QMainWindow):
 
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
-        scroll.setFixedWidth(screeninfo.get_monitors()[0].width - screeninfo.get_monitors()[0].width // 3)
-        scroll.setFixedHeight(screeninfo.get_monitors()[0].height - 440)
+        scroll.setFixedWidth(screeninfo.get_monitors()[0].width - screeninfo.get_monitors()[0].width // 15)
+        scroll.setFixedHeight(screeninfo.get_monitors()[0].height)
 
         self.but_layout = QHBoxLayout()
         plus_but = QPushButton("+")
@@ -144,10 +151,10 @@ class MainWindow(QMainWindow):
 
         scroll.setWidget(self.image_file_selector)
 
-        self.main_layout.addWidget(scroll, 0, 1, alignment=Qt.AlignmentFlag.AlignTop)
+        self.main_layout.addWidget(scroll, 0, 1)
         self.main_layout.addWidget(self.folder_selector, 0, 0, alignment=Qt.AlignmentFlag.AlignTop)
-        self.main_layout.addLayout(self.but_layout, 1, 0, alignment=Qt.AlignmentFlag.AlignTop)
-        self.image_file_selector.set_directory("C:/Users/OVER/PycharmProjects/SHRD/my-album/")
+        self.main_layout.addLayout(self.but_layout, 1, 0, alignment=Qt.AlignmentFlag.AlignBottom)
+        self.image_file_selector.set_directory(f"{getcwd()}/my-album/")
 
         self.main = QWidget()
         self.main.setLayout(self.main_layout)
@@ -167,6 +174,6 @@ if __name__ == "__main__":
     app.setStyle('Fusion')
 
     window = MainWindow()
-    window.show()
+    window.showMaximized()
 
     app.exec()
